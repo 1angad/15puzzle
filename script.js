@@ -19,24 +19,21 @@ class Game {
     }
 
     init() {
-    // position each block in its proper position
-    for (let y = 0; y < this.rows; y++) {
-        for (let x = 0; x < this.cols; x++) {
-            let blockIdx = x + y * this.cols;
-            if (blockIdx >= this.count) break;
-            let block = this.blocks[blockIdx];
-            if (!block) continue; // handle undefined blocks
-            this.positionBlockAtCoord(blockIdx, x, y);
-            block.addEventListener('click', (e) => this.onClickOnBlock(blockIdx));
-            this.indexes.push(blockIdx);
+        // position each block in its proper position
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
+                let blockIdx = x + y * this.cols;
+                if (blockIdx >= this.count) break;
+                let block = this.blocks[blockIdx];
+                if (!block) continue; // handle undefined blocks
+                this.positionBlockAtCoord(blockIdx, x, y);
+                block.addEventListener('click', (e) => this.onClickOnBlock(blockIdx));
+                this.indexes.push(blockIdx);
+            }
         }
+        this.updateBlockClasses();
+        this.indexes.push(this.count - 1);
     }
-    this.indexes.push(this.count - 1);
-}
-
-	shuffle() {
-		this.randomize(this.difficulty);
-	}
 
     randomize(iterationCount) {
         // move a random block (x iterationCount)
@@ -45,8 +42,9 @@ class Game {
             let moved = this.moveBlock(randomBlockIdx);
             if (!moved) i--;
         }
+        // Do not call updateBlockClasses here
     }
-
+    
     moveBlock(blockIdx) {
         // moves a block and return true if the block has moved
         let block = this.blocks[blockIdx];
@@ -56,6 +54,7 @@ class Game {
             this.indexes[this.emptyBlockCoords[0] + this.emptyBlockCoords[1] * this.cols] = this.indexes[blockCoords[0] + blockCoords[1] * this.cols];
             this.emptyBlockCoords[0] = blockCoords[0];
             this.emptyBlockCoords[1] = blockCoords[1];
+            this.updateBlockClasses();
             return true;
         }
         return false;
@@ -70,7 +69,7 @@ class Game {
         let canMove = (diff[0] == 1 && diff[1] == 0) || (diff[0] == 0 && diff[1] == 1);
         return canMove ? blockCoords : null;
     }
-
+    
     positionBlockAtCoord(blockIdx, x, y) {
         // position the block at a certain coordinates
         let block = this.blocks[blockIdx];
@@ -96,26 +95,35 @@ class Game {
         return true;
     }
 
-    setDifficulty(difficultyLevel) {
-        // set difficulty
-        this.difficulty = GameDifficulty[difficultyLevel - 1];
-        this.randomize(this.difficulty);
+    updateBlockClasses() {
+        // reset classes for all blocks
+        for (let i = 0; i < this.blocks.length; i++) {
+            this.blocks[i].classList.remove('moveablepiece');
+        }
+    
+        // get the coordinates of the blocks around the empty space
+        let surroundingCoords = [
+            [this.emptyBlockCoords[0] - 1, this.emptyBlockCoords[1]], // left
+            [this.emptyBlockCoords[0] + 1, this.emptyBlockCoords[1]], // right
+            [this.emptyBlockCoords[0], this.emptyBlockCoords[1] - 1], // top
+            [this.emptyBlockCoords[0], this.emptyBlockCoords[1] + 1]  // bottom
+        ];
+    
+        // add 'moveablepiece' class to blocks next to the empty space
+        for (let coords of surroundingCoords) {
+            if (coords[0] >= 0 && coords[0] < this.cols && coords[1] >= 0 && coords[1] < this.rows) {
+                let blockIdx = coords[0] + coords[1] * this.cols;
+                let block = this.blocks[blockIdx];
+                block.classList.add('moveablepiece');
+            }
+        }
     }
 }
 
-var game = new Game(1); // instantiate a new Game
+const game = new Game(1); // instantiate a new Game
 
-// taking care of the difficulty buttons
-var difficulty_buttons = Array.from(document.getElementsByClassName("difficulty_button"));
-difficulty_buttons.forEach((elem, idx) => {
-    elem.addEventListener('click', (e) => {
-        difficulty_buttons[GameDifficulty.indexOf(game.difficulty)].classList.remove("active");
-        elem.classList.add("active");
-        game.setDifficulty(idx + 1);
-    });
-});
-
-var shuffleButton = document.getElementById('shuffle_button');
-shuffleButton.addEventListener('click', function () {
-    game.shuffle();
+const shuffleButton = document.getElementById('shuffle_button');
+shuffleButton.addEventListener('click', () => {
+    game.randomize(5 * game.difficulty);
+    setTimeout(() => game.updateBlockClasses(), 500);
 });
