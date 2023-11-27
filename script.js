@@ -1,46 +1,24 @@
+const shuffleButton = document.querySelector('#shuffleButton');
+shuffleButton.addEventListener('click', () => {
+    newPuzzle.shuffleTiles(100);
+    setTimeout(() => newPuzzle.refreshTileClasses(), 500);
+});
+
 class Puzzle15 {
-    constructor() {
-        this.columns = 4;
-        this.rows = 4;
-        this.totalTiles = this.columns * this.rows;
-        this.tiles = document.getElementsByClassName("gameTile");
-        this.emptyTilePosition = { x: this.columns - 1, y: this.rows - 1 };
-        this.tileIndexes = [];
-        this.initialize();
-    }
 
-    initialize() {
-        for (let y = 0; y < this.rows; y++) {
-            for (let x = 0; x < this.columns; x++) {
-                const tileIndex = x + y * this.columns;
-                if (tileIndex >= this.totalTiles) break;
-                const tileElement = this.tiles[tileIndex];
-                if (!tileElement) continue;
-                this.positionTile(tileIndex, x, y);
-                tileElement.addEventListener('click', () => this.onClickTile(tileIndex));
-                this.tileIndexes.push(tileIndex);
-            }
-        }
-        this.tileIndexes.push(this.totalTiles - 1);
-        this.updateTileClasses();
-    }
+    rows = 4;
+    columns = 4;
+    totalTiles = 16;
+    hole = { x: this.columns - 1, y: this.rows - 1 };
 
-    shuffle(iterationCount) {
-        for (let i = 0; i < iterationCount; i++) {
-            const randomTileIndex = Math.floor(Math.random() * (this.totalTiles - 1));
-            const moved = this.moveTile(randomTileIndex);
-            if (!moved) i--;
-        }
-    }
-
-    moveTile(tileIndex) {
-        const tileElement = this.tiles[tileIndex];
-        const tilePosition = this.getTilePosition(tileElement);
+    moveTileToEmpty(tileIndex) {
+        const tilePosition = this.getTilePosition(this.tiles[tileIndex]);
         if (tilePosition !== null) {
-            this.positionTile(tileIndex, this.emptyTilePosition.x, this.emptyTilePosition.y);
-            this.tileIndexes[this.emptyTilePosition.x + this.emptyTilePosition.y * this.columns] = this.tileIndexes[tilePosition.x + tilePosition.y * this.columns];
+            this.setTilePosition(tileIndex, this.emptyTilePosition.x, this.emptyTilePosition.y);
+            this.tileSpots[this.emptyTilePosition.x + this.emptyTilePosition.y * this.columns] = this.tileSpots[tilePosition.x + tilePosition.y * this.columns];
             this.emptyTilePosition = { x: tilePosition.x, y: tilePosition.y };
-            this.updateTileClasses();
+            this.hole = { x: tilePosition.x, y: tilePosition.y };
+            this.refreshTileClasses();
             return true;
         }
         return false;
@@ -48,65 +26,94 @@ class Puzzle15 {
 
     getTilePosition(tileElement) {
         const tilePos = { x: parseInt(tileElement.style.left), y: parseInt(tileElement.style.top) };
-        const tileWidth = tileElement.clientWidth;
-        const tileCoords = { x: Math.floor(tilePos.x / tileWidth), y: Math.floor(tilePos.y / tileWidth) };
+        const tileCoords = { x: Math.floor(tilePos.x / tileElement.clientWidth), y: Math.floor(tilePos.y / tileElement.clientWidth) };
         const diff = { x: Math.abs(tileCoords.x - this.emptyTilePosition.x), y: Math.abs(tileCoords.y - this.emptyTilePosition.y) };
         return (diff.x === 1 && diff.y === 0) || (diff.x === 0 && diff.y === 1) ? tileCoords : null;
     }
 
-    positionTile(tileIndex, x, y) {
-        const tileElement = this.tiles[tileIndex];
-        tileElement.style.left = x * tileElement.clientWidth + "px";
-        tileElement.style.top = y * tileElement.clientWidth + "px";
+    getTileCoordinates(index) {
+        return [index % this.columns, Math.floor(index / this.columns)];
+    }
+
+    setTilePosition(tileIndex, x, y) {
+        this.tiles[tileIndex].style.left = x * this.tiles[tileIndex].clientWidth + "px";
+        this.tiles[tileIndex].style.top = y * this.tiles[tileIndex].clientWidth + "px";
     }
 
     onClickTile(tileIndex) {
-        if (this.moveTile(tileIndex)) {
-            if (this.isPuzzleSolved()) {
-                setTimeout(() => alert("Done."), 300);
-            }
+        if (this.moveTileToEmpty(tileIndex)) { }
+        if (this.done()) {
+            setTimeout(() => alert("Puzzle Complete!"), 300);
         }
     }
 
-    isPuzzleSolved() {
-        for (let i = 0; i < this.tileIndexes.length; i++) {
-            if (i === this.emptyTilePosition.x + this.emptyTilePosition.y * this.columns) {
-                continue;
-            }
-            if (this.tileIndexes[i] !== i) {
-                return false;
-            }
-        }
-        return true;
+    done() {
+        return this.tileSpots.every((index, i) => 
+            i === this.emptyTilePosition.x + this.emptyTilePosition.y * this.columns || index === i
+        );
     }
 
-    updateTileClasses() {
-        for (let i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].classList.remove('moveablepiece');
-        }
+    refreshTileClasses() {
+        Array.from(this.tiles).forEach((tile, index) => {
+            tile.classList.remove('moveablepiece');
+            const [x, y] = this.getTileCoordinates(index);
 
+            if (this.isAdjacentToEmpty(x, y)) {
+                tile.classList.add('moveablepiece');
+            }
+        });
+
+        const puzzleArray = Array.from({ length: this.rows }, () =>
+            Array.from({ length: this.columns }, () => 0)
+        );
+
+        this.tileSpots.forEach(tileIndex => {
+            const [x, y] = this.getTileCoordinates(tileIndex);
+            puzzleArray[y][x] = 1;
+        });
+        console.log(puzzleArray);
+    }
+
+    constructor() {
+        this.startPuzzle();
+    }
+
+    isAdjacentToEmpty(x, y) {
         const adjacentPositions = [
-            [this.emptyTilePosition.x - 1, this.emptyTilePosition.y],
-            [this.emptyTilePosition.x + 1, this.emptyTilePosition.y],
-            [this.emptyTilePosition.x, this.emptyTilePosition.y - 1],
-            [this.emptyTilePosition.x, this.emptyTilePosition.y + 1]
+            [this.hole.x - 1, this.hole.y],
+            [this.hole.x + 1, this.hole.y],
+            [this.hole.x, this.hole.y - 1],
+            [this.hole.x, this.hole.y + 1]
         ];
-
-        for (const coords of adjacentPositions) {
-            const [x, y] = coords;
-            if (x >= 0 && x < this.columns && y >= 0 && y < this.rows) {
-                const tileIndex = x + y * this.columns;
-                const tileElement = this.tiles[tileIndex];
-                tileElement.classList.add('moveablepiece');
-            }
-        }
+    
+        return adjacentPositions.some(([adjX, adjY]) => adjX === x && adjY === y);
     }
+
+    shuffleTiles(iterationCount) {
+        Array.from({ length: iterationCount }).forEach(() => {
+            if (this.moveTileToEmpty(   Math.floor(Math.random() * (this.totalTiles - 1))   ) === false) {
+                iterationCount++;
+            }
+        });
+    }
+
+    startPuzzle() {
+        Array.from({ length: this.rows }).forEach((_, y) => { // x, y grid
+            Array.from({ length: this.columns }).forEach((_, x) => {
+                const tileIndex = x + y * this.columns;
+                if (!this.tiles[tileIndex]) return;
+                this.setTilePosition(tileIndex, x, y);
+                this.tiles[tileIndex].addEventListener('click', () => this.onClickTile(tileIndex));
+                this.tileSpots.push(tileIndex);
+            });
+        });
+        this.refreshTileClasses();
+    }
+    
+    tiles = document.querySelectorAll(".gameTile");
+    emptyTilePosition = { x: this.columns - 1, y: this.rows - 1 };
+    tileSpots = [];
+
 }
 
-const fifteenPuzzle = new Puzzle15();
-
-const shuffleButton = document.getElementById('shuffleButton');
-shuffleButton.addEventListener('click', () => {
-    fifteenPuzzle.shuffle(5);
-    setTimeout(() => fifteenPuzzle.updateTileClasses(), 500);
-});
+const newPuzzle = new Puzzle15();
