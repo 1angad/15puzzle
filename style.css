@@ -5,43 +5,31 @@
   font-family: sans-serif;
 }
 
-:root {
-  --bgcol: #37474F;
-  --mcol0: #29B6F6;
-  --mcol1: #2196F3;
-  --mcol2: #1976D2;
-  --txtcol0: #90A4AE;
-  --txtcol1: #607D8B;
-  --whitecol: #ECEFF1;
-  --darkcol: #263238;
-}
-
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: 15vh;
-  background-color: var(--bgcol);
+  background-color: #e13c30;
 }
 
-#puzzle_container {
+#gameContainer {
   position: relative;
   width: 50vh;
   height: 50vh;
-  background-color: var(--darkcol);
+  background-color: #fafa33;
   border-radius: 8px;
-  border: 1px solid var(--mcol0);
+  border: 1px solid #3f77f5;
   display: grid;
   grid-template-columns: repeat(4, 96px);
   grid-template-rows: repeat(4, 96px);
   gap: 2px;
 }
 
-.puzzle_block {
+.gameTile {
   position: absolute;
   width: calc(100% / 4);
   height: calc(100% / 4);
-  background-color: var(--txtcol1);
   color: #000000;
   font-size: 32pt;
   font-weight: bold;
@@ -53,7 +41,7 @@ body {
   align-items: center;
   justify-content: center;
   box-sizing: content-box;
-  border: 2px solid black; 
+  border: 2px solid black;
 }
 
 .moveablepiece:hover {
@@ -61,138 +49,104 @@ body {
   color: green;
   text-decoration: underline;
 }
-/* Adjust background image and position for each puzzle piece */
-.puzzle_block:nth-child(1) {
+
+.gameTile:nth-child(1) {
   background-image: url('mario.jpg');
   background-position: 0 0;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(2) {
+.gameTile:nth-child(2) {
   background-image: url('mario.jpg');
   background-position: -100% 0;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(3) {
+.gameTile:nth-child(3) {
   background-image: url('mario.jpg');
   background-position: -200% 0;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(4) {
+.gameTile:nth-child(4) {
   background-image: url('mario.jpg');
   background-position: -300% 0;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(5) {
+.gameTile:nth-child(5) {
   background-image: url('mario.jpg');
   background-position: 0 -100%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(6) {
+.gameTile:nth-child(6) {
   background-image: url('mario.jpg');
   background-position: -100% -100%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(7) {
+.gameTile:nth-child(7) {
   background-image: url('mario.jpg');
   background-position: -200% -100%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(8) {
+.gameTile:nth-child(8) {
   background-image: url('mario.jpg');
   background-position: -300% -100%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(9) {
+.gameTile:nth-child(9) {
   background-image: url('mario.jpg');
   background-position: 0 200%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(10) {
+.gameTile:nth-child(10) {
   background-image: url('mario.jpg');
   background-position: -100% -200%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(11) {
+.gameTile:nth-child(11) {
   background-image: url('mario.jpg');
   background-position: -200% -200%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(12) {
+.gameTile:nth-child(12) {
   background-image: url('mario.jpg');
   background-position: -300% -200%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(13) {
+.gameTile:nth-child(13) {
   background-image: url('mario.jpg');
   background-position: 0 -300%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(14) {
+.gameTile:nth-child(14) {
   background-image: url('mario.jpg');
   background-position: -100% -300%;
   background-size: 400% 400%;
 }
 
-.puzzle_block:nth-child(15) {
+.gameTile:nth-child(15) {
   background-image: url('mario.jpg');
   background-position: -200% -300%;
   background-size: 400% 400%;
 }
 
-.puzzle_block.empty { background: none; }
+.gameTile.empty { background: none; }
 
-/* difficulty container */
-#difficulty_container {
-  display: flex;
-  flex-direction: row;
-  width: 50vh;
-  height: 10vh;
-  background-color: var(--darkcol);
-  border-radius: 8px;
-  margin-top: 22px;
-}
-
-.difficulty_button {
-  flex-grow: 1;
-  background-color: inherit;
-  color: var(--mcol2);
-  text-align: center;
-  font-size: 3vh;
-  font-weight: bold;
-  padding-top: 5%;
-  margin: 4px;
-  cursor: pointer;
-  transition: font-size 0.3s;
-}
-
-.difficulty_button:hover {
-  opacity: 0.8;
-  font-size: 3.5vh;
-}
-
-.difficulty_button.active {
-  background-color: inherit;
-  color: var(--mcol0);
-}
-
-#shuffle_button {
+#shuffleButton {
     margin-top: 10px;
     padding: 10px;
-    background-color: var(--mcol0);
-    color: var(--whitecol);
+    background-color: #3f77f5; 
+    color: #fff; 
     font-size: 16px;
     cursor: pointer;
     border: none;
@@ -200,6 +154,6 @@ body {
     transition: background-color 0.3s;
 }
 
-#shuffle_button:hover {
-    background-color: var(--mcol1);
+#shuffleButton:hover {
+    background-color: #2196F3; 
 }
