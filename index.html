@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Please grade the sliding tile extra feature!  -->
+    <h2>15puzzle!</h2>
+    <p>🎮</p>
+    <br>
+    <div id="gameContainer">
+        <div class="gameTile">1</div>
+        <div class="gameTile">2</div>     
+        <div class="gameTile">3</div>     
+        <div class="gameTile">4</div>     
+        <div class="gameTile">5</div>      
+        <div class="gameTile">6</div>     
+        <div class="gameTile">7</div>     
+        <div class="gameTile">8</div>
+        <div class="gameTile">9</div>     
+        <div class="gameTile">10</div> 
+        <div class="gameTile">11</div> 
+        <div class="gameTile">12</div> 
+        <div class="gameTile">13</div>
+        <div class="gameTile">14</div>  
+        <div class="gameTile">15</div>  
+    </div>
+    <div>Time: <span id="timeDisplay">0</span> seconds</div>
+    <div>Moves: <span id="movesDisplay">0</span></div>
+    <audio id="gameMusic" loop>
+        <source src="gametune.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <button id="shuffleButton">Shuffle Tiles</button>
+    <button id="solveButton">Solve Puzzle</button> 
+    <script src="script.js"></script>
+</body>
+</html>
