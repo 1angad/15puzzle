@@ -1,0 +1,179 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15vh;
+  background-color: #e13c30;
+}
+
+#gameContainer {
+  position: relative;
+  width: 50vh;
+  height: 50vh;
+  background-color: #fafa33;
+  display: grid;
+  grid-template-columns: repeat(4, 96px);
+  grid-template-rows: repeat(4, 96px);
+  gap: 2px;
+}
+
+.gameTile {
+  position: absolute;
+  width: calc(100% / 4);
+  height: calc(100% / 4);
+  color: #000000;
+  font-size: 32pt;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: left 0.3s, top 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  border: 2px solid black;
+}
+
+@keyframes slide {
+  from {
+    margin-left: 100%;
+    width: 300%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+}
+
+.moveablepiece:hover {
+  outline: 1px solid red;
+  color: green;
+  text-decoration: underline;
+}
+
+.gameTile:nth-child(1) {
+  background-image: url('mario.jpg');
+  background-position: 0 0;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(2) {
+  background-image: url('mario.jpg');
+  background-position: -100% 0;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(3) {
+  background-image: url('mario.jpg');
+  background-position: -200% 0;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(4) {
+  background-image: url('mario.jpg');
+  background-position: -300% 0;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(5) {
+  background-image: url('mario.jpg');
+  background-position: 0 -100%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(6) {
+  background-image: url('mario.jpg');
+  background-position: -100% -100%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(7) {
+  background-image: url('mario.jpg');
+  background-position: -200% -100%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(8) {
+  background-image: url('mario.jpg');
+  background-position: -300% -100%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(9) {
+  background-image: url('mario.jpg');
+  background-position: 0 200%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(10) {
+  background-image: url('mario.jpg');
+  background-position: -100% -200%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(11) {
+  background-image: url('mario.jpg');
+  background-position: -200% -200%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(12) {
+  background-image: url('mario.jpg');
+  background-position: -300% -200%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(13) {
+  background-image: url('mario.jpg');
+  background-position: 0 -300%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(14) {
+  background-image: url('mario.jpg');
+  background-position: -100% -300%;
+  background-size: 400% 400%;
+}
+
+.gameTile:nth-child(15) {
+  background-image: url('mario.jpg');
+  background-position: -200% -300%;
+  background-size: 400% 400%;
+}
+
+.gameTile.empty { background: none; }
+
+#shuffleButton {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #3f77f5; 
+    color: #fff; 
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+#solveButton {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #3f77f5; 
+  color: #fff; 
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+#shuffleButton:hover {
+    background-color: #2196F3; 
+}
